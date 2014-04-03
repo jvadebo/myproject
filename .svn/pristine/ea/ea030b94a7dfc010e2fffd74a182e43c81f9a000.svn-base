@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="orderServiceMock" class="com.vadebo.webapp.myproject.service.mock.OrderServiceMock"></bean>	
+		
+	<bean id="transactionService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="http://localhost:8081/service.payment"></property>
+		<property name="serviceInterface" value="com.vadebo.paymentclient.service.TransactionService"></property>
+	</bean>
+
+	
+	<!-- Order Service -->	
+	<bean id="orderService" class="com.vadebo.webapp.myproject.service.OrderServiceImpl">
+		<constructor-arg ref="jdbcOrderRepository"></constructor-arg>
+	</bean>
+		
+</beans>

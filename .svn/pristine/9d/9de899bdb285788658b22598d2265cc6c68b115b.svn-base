@@ -1,0 +1,23 @@
+package com.vadebo.webapp.myproject.service;
+
+/**
+ * This internal interface, handles all transactions 
+ * services used internally by the payment system.
+ * @author jvadebo
+ *
+ */
+public interface TransactionService {
+
+	/**
+	 * Credit the customer with amount.
+	 * @param amount The amount to credit.
+	 */
+	public void credit(double amount);
+	
+	/**
+	 * Debit customer with amount.
+	 * @param amount The amount to debit.
+	 */
+	public void debit(double amount);
+	
+}

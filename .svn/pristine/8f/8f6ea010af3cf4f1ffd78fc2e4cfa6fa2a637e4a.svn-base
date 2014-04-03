@@ -1,0 +1,47 @@
+package com.vadebo.webapp.myproject.repository.impl;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import com.vadebo.webapp.myproject.model.Order;
+import com.vadebo.webapp.myproject.repository.OrderRepository;
+
+public class OrderRepositoryImpl implements OrderRepository {
+
+	
+	private DataSource dataSource;
+	
+	public OrderRepositoryImpl(DataSource dataSource){
+		this.dataSource = dataSource;
+	}
+	
+	@Override
+	public List<Order> findAll() {
+		List<Order> orders = new ArrayList<Order>();
+		
+		try {
+			Connection conn = dataSource.getConnection();
+			
+			PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM myproject.order");
+			ResultSet set = preparedStatement.executeQuery();
+			while(set.next()){
+				int id = set.getInt("id");
+				Date created = set.getDate("created");
+				Date delivered = set.getDate("delivered");
+				orders.add(new Order(id, created, delivered));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return orders;
+	}
+
+}

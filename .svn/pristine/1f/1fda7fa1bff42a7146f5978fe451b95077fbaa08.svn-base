@@ -1,0 +1,39 @@
+package com.vadebo.webapp.myproject.controller;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.vadebo.webapp.myproject.model.Order;
+import com.vadebo.webapp.myproject.response.OrderResponse;
+import com.vadebo.webapp.myproject.service.OrderService;
+
+
+@Controller
+public class OrderController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+	
+	@Resource(name="orderServiceMock")
+	private OrderService orderService;
+	
+	@RequestMapping(value="/api/v1/Orders/{id}")
+	public String getOrderById(Model model, HttpServletRequest request, @PathVariable int id){
+		if(logger.isDebugEnabled()){
+			logger.debug("Rest request made to url:" + request.getRequestURL().toString());
+		}
+		Order order = orderService.getOrderById(id);
+		OrderResponse orderResponse = new OrderResponse();
+		orderResponse.setId(order.getId());
+		orderResponse.setCreated(order.getCreated());
+		orderResponse.setDelivered(order.getDelivered());
+		model.addAttribute(orderResponse);
+		return "order";
+	}
+}

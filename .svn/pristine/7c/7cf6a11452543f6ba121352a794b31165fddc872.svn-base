@@ -1,0 +1,40 @@
+package com.vadebo.webapp.myproject.model;
+
+import java.util.Date;
+
+public class Order {
+
+	private int id;
+	private Date created = new Date();
+	private Date delivered;
+	
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public Date getCreated() {
+		return created;
+	}
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+	public Date getDelivered() {
+		return delivered;
+	}
+	public void setDelivered(Date delivered) {
+		this.delivered = delivered;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Order [id=").append(id).append(", created=")
+				.append(created).append(", delivered=").append(delivered)
+				.append("]");
+		return builder.toString();
+	}
+	
+}

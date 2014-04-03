@@ -1,0 +1,83 @@
+package com.vadebo.webapp.myproject.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.vadebo.paymentclient.service.TransactionService;
+import com.vadebo.webapp.myproject.command.OrderForm;
+import com.vadebo.webapp.myproject.model.Order;
+import com.vadebo.webapp.myproject.response.OrderResponse;
+import com.vadebo.webapp.myproject.service.OrderService;
+
+
+
+@Controller
+@RequestMapping(value="/api/v1/Orders")
+public class OrderController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+	
+	@Resource(name="transactionService")
+	private TransactionService transactionService;
+	
+	@Resource(name="orderServiceMock")
+	private OrderService orderService;
+	
+	@RequestMapping(value="{id}", method=RequestMethod.GET)
+	public String getOrderById(Model model, HttpServletRequest request, @PathVariable int id){
+		if(logger.isDebugEnabled()){
+			logger.debug("Rest request made to url:" + request.getRequestURL().toString());
+		}
+		Order order = orderService.getOrderById(id);
+		OrderResponse orderResponse = new OrderResponse();
+		orderResponse.setId(order.getId());
+		orderResponse.setCreated(order.getCreated());
+		orderResponse.setDelivered(order.getDelivered());
+		model.addAttribute(orderResponse);
+		return "order";
+	}
+	
+	@RequestMapping(method=RequestMethod.GET)
+	public String getAllOrders(Model model, HttpServletRequest request){
+		List<Order> orders = orderService.getAll();
+		if(logger.isDebugEnabled()){
+			logger.debug("Rest request made to url:" + request.getRequestURL().toString());
+		}
+		transactionService.credit(100);
+		model.addAttribute(orders);
+		return "orderList";
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, params="new")
+	public String orderPage(Model model, HttpServletRequest request){
+		if(logger.isDebugEnabled()){
+			logger.debug("Rest request made to url:" + request.getRequestURL().toString()+"?new");
+		}
+		//Create a command order object, which should be directly
+		//linked to the jsp form page for new order. Dont use
+		//Order object directly. This is a model object which
+		//only be used by services, not by a controller.
+		OrderForm form = new OrderForm();
+		model.addAttribute(form);
+		return "newOrder";
+	}
+	
+	@RequestMapping(method=RequestMethod.POST, params="new")
+	public String createOrderFromForm(OrderForm orderForm, Model model, HttpServletRequest request){
+		if(logger.isDebugEnabled()){
+			logger.debug("Rest request made to url:" + request.getRequestURL().toString());
+		}
+		System.out.println(orderForm);
+		return "orderList";
+	}
+}
