@@ -19,6 +19,7 @@ public class HibernateOrderRepositoryImpl implements OrderRepository {
 	@SuppressWarnings("unused")
 	@Override
 	public List<Order> findAll() {
+		System.out.println("inside hibernate order Repository");
 		Session session = sessionFactory.getCurrentSession();
 		return null;
 	}
