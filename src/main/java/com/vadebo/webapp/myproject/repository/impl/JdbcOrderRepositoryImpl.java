@@ -1,0 +1,45 @@
+package com.vadebo.webapp.myproject.repository.impl;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+
+import com.vadebo.webapp.myproject.model.Order;
+import com.vadebo.webapp.myproject.repository.OrderRepository;
+
+public class JdbcOrderRepositoryImpl implements OrderRepository {
+
+	private JdbcTemplate jdbcTemplate;
+	
+	public JdbcOrderRepositoryImpl(DataSource dataSource){
+		jdbcTemplate = new JdbcTemplate(dataSource);
+	}
+	
+	@Override
+	public List<Order> findAll() {
+		List<Order> orders = new ArrayList<Order>();
+		
+		try {
+			String query = "SELECT * FROM myproject.order";
+			orders = jdbcTemplate.query(query, new RowMapper<Order>() {
+
+				@Override
+				public Order mapRow(ResultSet arg0, int arg1) throws SQLException {
+					return new Order(arg0.getInt("id")
+							, arg0.getDate("created")
+							, arg0.getDate("delivered"));
+				}
+			});
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return orders;
+	}
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Jdbc Repository -->
+	<bean id="jdbcOrderRepository" class="com.vadebo.webapp.myproject.repository.impl.JdbcOrderRepositoryImpl">
+		<constructor-arg ref="dataSource"></constructor-arg>
+	</bean>
+				
+	<bean id="hibernateOrderRepository" class="com.vadebo.webapp.myproject.repository.impl.HibernateOrderRepositoryImpl">
+		<constructor-arg ref="sessionFactory"></constructor-arg>
+	</bean>
+		
+</beans>
